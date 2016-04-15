@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Highcharts Example</title>
+
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
+		
+		<link type="text/css" href="css/style.css" rel="stylesheet" />
+		
+		<script type="text/javascript">
+			var detailTileCount = 0;
+
+			function addTile(chart) {
+				switch (chart.type) {
+					case "PIE":
+						createPieChart(chart);
+						break;
+					case "BAR":
+						createBarChart(chart);
+						break;
+					case "COLUMN":
+						createColumnChart(chart);
+						break;
+					case "LIST":
+						createListWidget(chart);
+						break;
+				}
+				detailTileCount++;			
+			}
+			
+			function createPieChart(chart) {
+				$("#details-tile-container").append("<div id='details-tile-" + chart.id + "' class='tile-body details-tile'></div>");
+				
+				var chart = new Highcharts.Chart({
+					chart: {
+						renderTo: "details-tile-" + chart.id,
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie'
+					},
+					title: {
+						text: chart.name,
+						style: {
+							fontFamily: 'Calibri',
+							fontSize: '19px',
+							fontWeight: 'bold',
+							color: '#444'
+						},
+						align: 'left'
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								style: {
+									fontWeight: 'normal'
+								}
+							}
+						}
+					},
+					series: [{
+						name: chart.feature,
+						colorByPoint: true,
+						data : (function() {
+							var chartData = [];
+							for (var key in chart.data) {
+								if (chart.data.hasOwnProperty(key)) {
+									chartData.push([key, chart.data[key]]);
+								}
+							}
+							return chartData;
+						})(),
+						point:{
+							events:{
+								click: function (event) {
+									callBack(this.name, this.series.name);
+								}
+							}
+						}
+					}]
+				});
+			}
+			
+			function createColumnChart(chart) {
+				$("#details-tile-container").append("<div id='details-tile-" + chart.id + "' class='tile-body details-tile'></div>");
+						
+				var chart = new Highcharts.Chart({
+					chart: {
+						renderTo: "details-tile-" + chart.id,
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'column'
+					},
+					title: {
+						text: chart.name,
+						style: {
+							fontFamily: 'Calibri',
+							fontSize: '19px',
+							fontWeight: 'bold',
+							color: '#444'
+						},
+						align: 'left'
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.y:.1f}%</b>'
+					},
+					xAxis: {
+						categories: Object.keys(chart.data),
+						labels: {
+							style: {
+								fontSize: '10px',
+								fontWeight: 'normal'
+							}
+						}
+					},
+					yAxis: {
+						title: {
+							enabled: false
+						},
+						gridLineWidth: 0,
+						minorGridLineWidth: 0
+					},
+					legend: {
+						enabled: false
+					},
+					plotOptions: {
+						column: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								style: {
+									fontWeight: 'normal'
+								}
+							}
+						}
+					},
+					series: [{
+						name: chart.feature,
+						colorByPoint: true,
+						data : (function() {
+							var chartData = [];
+							for (var key in chart.data) {
+								if (chart.data.hasOwnProperty(key)) {
+									chartData.push([key, chart.data[key]]);
+								}
+							}
+							return chartData;
+						})(),
+						point:{
+							events:{
+								click: function (event) {
+									callBack(this.name, this.series.name);
+								}
+							}
+						}
+					}]
+				});
+			}
+			
+			function createBarChart(chart) {
+				$("#details-tile-container").append("<div id='details-tile-" + chart.id + "' class='tile-body details-tile'></div>");
+						
+				var chart = new Highcharts.Chart({
+					chart: {
+						renderTo: "details-tile-" + chart.id,
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'bar'
+					},
+					title: {
+						text: chart.name,
+						style: {
+							fontFamily: 'Calibri',
+							fontSize: '19px',
+							fontWeight: 'bold',
+							color: '#444'
+						},
+						align: 'left'
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.y:.1f}%</b>'
+					},
+					xAxis: {
+						categories: Object.keys(chart.data)
+					},
+					yAxis: {
+						title: {
+							enabled: false
+						},
+						gridLineWidth: 0,
+						minorGridLineWidth: 0
+					},
+					legend: {
+						enabled: false
+					},
+					plotOptions: {
+						bar: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {
+								style: {
+									fontWeight: 'normal'
+								}
+							}
+						}
+					},
+					series: [{
+						name: chart.feature,
+						colorByPoint: true,
+						data : (function() {
+							var chartData = [];
+							for (var key in chart.data) {
+								if (chart.data.hasOwnProperty(key)) {
+									chartData.push([key, chart.data[key]]);
+								}
+							}
+							return chartData;
+						})(),
+						point:{
+							events:{
+								click: function (event) {
+									callBack(this.name, this.series.name);
+								}
+							}
+						}
+					}]
+				});
+			}
+			
+			function createListWidget(chart) {
+				$("#details-tile-container").append("<div id='details-tile-" + chart.id + "' class='tile-body details-tile'></div>");
+				$("#details-tile-" + chart.id).append("<div class='details-tile-title'>" + chart.name + "</div>");
+				$("#details-tile-" + chart.id).append("<div id='details-tile-table-scrollable-container-" + chart.id + "' class='details-tile-table-scrollable-container'></div>");
+				
+				for (var key in chart.data) {
+					if (chart.data.hasOwnProperty(key)) {
+						var index = Object.keys(chart.data).indexOf(key);
+						$("#details-tile-table-scrollable-container-" + chart.id).append("<div id='details-tile-table-item-"  + chart.id + "-" + index + "' class='details-tile-table-item'> <span class='details-tile-table-item-key'>" + key + "</span> <div class='details-tile-table-item-value'>" + chart.data[key] + "</div> </div>");
+						$("#details-tile-table-item-"  + chart.id + "-" + index).on("click", {"chart": chart.id, "key": key}, function( event ) {
+							callBack(event.data.key, event.data.chart);
+						});
+					}
+				}
+			}
+			
+			$(document).ready(function() {	
+				// Actions for the scroll buttons on each side of the detail tile container.
+				$("#scroll-left").click(function() {
+					$("#details-tile-container").animate({
+						scrollLeft : "-=350"
+					});
+				});
+
+				$("#scroll-right").click(function() {
+					$("#details-tile-container").animate({
+						scrollLeft : "+=350"
+					});
+				});
+				
+				/* Enable these to debug in a browser */
+				/*addTile({'id':'ByCurrency1','name':'By Currency','data':{'AUD':13.0,'CHF':10.0,'EUR':5.0,'GBP':40.0},'type':'PIE','feature':'Currency'});*/
+				/*addTile({'id':'ByCurrency2','name':'By Currency','data':{'AUD':13.0,'CHF':10.0,'USD':37.0,'GBP':40.0},'type':'LIST','feature':'Currency'});*/
+			});
+		</script>
+</head>
+<body>
+	<div id="carousel-container" class="carousel-region">
+		<button class="scroll-control image-left-scroll" id="scroll-left"></button>
+		<div id="tile-border-left" class="tile-border float-left"></div>
+		<button class="scroll-control image-right-scroll" id="scroll-right"></button>
+		<div id="tile-border-right" class="tile-border float-right"></div>
+		<div id="details-tile-container">
+		</div>
+	</div>
+</body>
+	
+
+</html>
